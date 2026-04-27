@@ -1,0 +1,861 @@
+<html class="scroll-smooth" lang="pt-BR"><head></head><body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Rio Concierge | Descoberta de Encontros Curados</title>
+<meta content="Descubra os melhores lugares para encontros no Rio de Janeiro com base no seu clima, orçamento e bairro." name="description"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400;1,700&amp;family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+          tailwind.config = {
+            darkMode: "class",
+            theme: {
+              extend: {
+                "colors": {
+                    "on-secondary": "#ffffff",
+                    "on-background": "#1b1c19",
+                    "background": "#fbf9f4",
+                    "tertiary": "#735c00",
+                    "tertiary-container": "#cca72f",
+                    "primary-container": "#6b1d23",
+                    "on-primary-container": "#f08486",
+                    "secondary": "#565f70",
+                    "secondary-container": "#d7e0f4",
+                    "surface": "#fbf9f4",
+                    "surface-container": "#f0eee9",
+                    "surface-container-low": "#f5f3ee",
+                    "surface-container-high": "#eae8e3",
+                    "primary": "#4d0610",
+                    "outline": "#887271",
+                    "outline-variant": "#dbc0c0",
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "fontFamily": {
+                    "label-caps": ["Plus Jakarta Sans"],
+                    "button": ["Plus Jakarta Sans"],
+                    "h1": ["Noto Serif"],
+                    "h2": ["Noto Serif"],
+                    "h3": ["Noto Serif"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+                }
+              }
+            }
+          }
+        </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .chip-active {
+            background-color: #6b1d23 !important;
+            color: #ffffff !important;
+            border-color: #6b1d23 !important;
+        }
+        .chip-active span {
+            color: #ffffff !important;
+        }
+        .nav-link-active {
+            color: #6B1D23;
+            border-bottom: 2px solid #6B1D23;
+            padding-bottom: 4px;
+            font-weight: 600;
+        }
+        .mode-btn-active {
+            background-color: #6b1d23;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .tab-active {
+            border-bottom: 2px solid #4d0610;
+            color: #4d0610;
+            font-weight: bold;
+        }
+    </style>
+<nav class="fixed top-0 w-full z-[60] bg-[#FCF9F5] border-b border-stone-200">
+<div class="flex justify-between items-center h-20 px-10 max-w-7xl mx-auto">
+<div class="font-serif italic font-bold text-2xl text-[#6B1D23] tracking-tight cursor-pointer" onclick="showView('home')">
+            The Rio Concierge
+        </div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-stone-500 hover:text-[#6B1D23] transition-colors text-body-md nav-item home-nav nav-link-active" href="#" onclick="showView('home')">Início</a>
+<a class="text-stone-500 hover:text-[#6B1D23] transition-colors text-body-md" href="#">Como Funciona</a>
+<a class="text-stone-500 hover:text-[#6B1D23] transition-colors text-body-md" href="#">Planos Prontos</a>
+<a class="text-stone-500 hover:text-[#6B1D23] transition-colors text-body-md" href="#">Salvos</a>
+<a class="text-stone-500 hover:text-[#6B1D23] transition-colors text-body-md nav-item chats-nav flex items-center gap-1" href="#" onclick="showView('chats')">
+                Conversas <span class="w-2 h-2 rounded-full bg-primary hidden" id="chat-unread-dot"></span>
+</a>
+</div>
+<button class="bg-primary-container text-white px-6 py-3 rounded-lg font-button hover:opacity-90 transition-all">
+            Planejar Encontro
+        </button>
+</div>
+</nav>
+<main class="pt-20">
+<!-- Mode Switcher -->
+<div class="w-full flex justify-center py-6 bg-surface-container-low border-b border-stone-200 sticky top-20 z-50">
+<div class="bg-white p-1 rounded-xl border border-outline-variant flex gap-1 shadow-sm">
+<button class="px-6 py-2 rounded-lg font-button text-sm transition-all mode-btn-active" id="mode-planner" onclick="switchAppMode('planner')">Date Planner</button>
+<button class="px-6 py-2 rounded-lg font-button text-sm transition-all text-stone-500 hover:bg-stone-50" id="mode-party" onclick="switchAppMode('party')">Party Radar</button>
+</div>
+</div>
+<!-- Home View -->
+<div id="view-home">
+<!-- Hero Section -->
+<section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-black/40 z-10"></div>
+<img alt="Rio de Janeiro Sunset" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnnV6N4nXUnvaobH0OiFO-Bba_24s6G-cTB3LNG15mpw3G5Xk5xcJTR93VcTVHcxHgoMqWZjmsigSMQkqhKZ-3niJ41wn2kFJucibyaUBU3aTS0wgNsRaY1mvDJmqmIJPZ1vW6u6xbjual4LmPj9oNXxQS6DC6K8NRlWB_QTd3W38BVgg4pdmljfdA9IxQoDezcpF80jHCGEupDed8S0M4RsDGKk-yxs08_4Kd_3s-KiMzKuzWKUNptcTeQcu2B7LMrKsfxZQJjxU"/>
+</div>
+<div class="relative z-20 text-center px-6 max-w-4xl mx-auto">
+<span class="font-label-caps text-label-caps text-white/90 mb-4 block uppercase tracking-widest">A Ferramenta de Descoberta Carioca</span>
+<h1 class="font-h1 text-h1 text-white mb-6 leading-tight text-5xl md:text-6xl" id="hero-title">O que fazer com seu par hoje à noite?</h1>
+<p class="font-body-lg text-body-lg text-white/80 mb-10 max-w-2xl mx-auto" id="hero-subtitle">Encontre os melhores programas e lugares no Rio de Janeiro com base no seu clima, orçamento e região.</p>
+<a class="inline-flex items-center gap-2 bg-background text-primary px-8 py-4 rounded-lg font-button hover:bg-surface-container transition-all shadow-xl" href="#planner">
+                    Começar Agora <span class="material-symbols-outlined">arrow_downward</span>
+</a>
+</div>
+</section>
+<!-- Planner Section -->
+<section class="py-12 bg-surface-container-low px-4 md:px-0" id="planner">
+<div class="max-w-5xl mx-auto">
+<div class="bg-white rounded-2xl shadow-sm border border-outline-variant p-8 md:p-12">
+<div class="space-y-12" id="planner-form">
+<!-- Step 1: Mood Cards -->
+<div>
+<h3 class="font-h3 text-h3 mb-6 flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-sm">1</span>
+<span id="step-1-title">Qual é o clima?</span>
+</h3>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="mood-grid">
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="romantico" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">favorite</span>
+<span class="font-button text-sm font-semibold">Romântico</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="calmo" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">potted_plant</span>
+<span class="font-button text-sm font-semibold">Calmo</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="divertido" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">celebration</span>
+<span class="font-button text-sm font-semibold">Divertido</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="espontaneo" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">bolt</span>
+<span class="font-button text-sm font-semibold">Espontâneo</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="com_vista" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">landscape</span>
+<span class="font-button text-sm font-semibold">Com Vista</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="cafe_sobremesa" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">coffee</span>
+<span class="font-button text-sm font-semibold">Café &amp; Sobremesa</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="economico" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">savings</span>
+<span class="font-button text-sm font-semibold">Econômico</span>
+</button>
+<button class="mood-btn border border-outline-variant p-6 rounded-xl flex flex-col items-center gap-3 hover:border-primary transition-all group bg-white" data-mood="cultural" onclick="toggleMood(this)">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">museum</span>
+<span class="font-button text-sm font-semibold">Cultural</span>
+</button>
+</div>
+</div>
+<!-- Step 2 & 3: Budget & Location -->
+<div class="grid md:grid-cols-2 gap-12">
+<div>
+<h3 class="font-h3 text-h3 mb-6 flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-sm">2</span>
+                                    Defina seu orçamento
+                                </h3>
+<div class="grid grid-cols-2 gap-3" id="budget-grid">
+<button class="budget-btn border border-outline-variant p-4 rounded-xl flex flex-col items-start transition-all bg-white hover:border-primary" data-budget="economico" onclick="toggleBudget(this)">
+<span class="font-button font-bold text-sm">Econômico</span>
+<span class="text-[10px] opacity-60">Até R$80 / p</span>
+</button>
+<button class="budget-btn border border-outline-variant p-4 rounded-xl flex flex-col items-start transition-all bg-white hover:border-primary" data-budget="medio" onclick="toggleBudget(this)">
+<span class="font-button font-bold text-sm">Médio</span>
+<span class="text-[10px] opacity-60">R$80–180 / p</span>
+</button>
+<button class="budget-btn border border-outline-variant p-4 rounded-xl flex flex-col items-start transition-all bg-white hover:border-primary" data-budget="medio_alto" onclick="toggleBudget(this)">
+<span class="font-button font-bold text-sm">Médio-Alto</span>
+<span class="text-[10px] opacity-60">R$180–320 / p</span>
+</button>
+<button class="budget-btn border border-outline-variant p-4 rounded-xl flex flex-col items-start transition-all bg-white hover:border-primary" data-budget="premium" onclick="toggleBudget(this)">
+<span class="font-button font-bold text-sm">Premium</span>
+<span class="text-[10px] opacity-60">Acima de R$320 / p</span>
+</button>
+</div>
+</div>
+<div>
+<h3 class="font-h3 text-h3 mb-6 flex items-center gap-3">
+<span class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-sm">3</span>
+                                    Localização
+                                </h3>
+<div class="space-y-4">
+<button class="w-full flex items-center justify-center gap-2 py-4 border border-outline text-primary font-button rounded-xl hover:bg-surface transition-all bg-white group">
+<span class="material-symbols-outlined text-xl group-hover:rotate-45 transition-transform">my_location</span>
+<span>Usar minha localização</span>
+</button>
+<div class="relative">
+<select class="w-full border-outline-variant rounded-xl py-4 px-4 font-body-md focus:border-primary focus:ring-primary appearance-none bg-white cursor-pointer" id="neighborhood-select">
+<option value="">Todos os Bairros</option>
+<option value="Santa Teresa">Santa Teresa</option>
+<option value="Ipanema / Leblon">Ipanema / Leblon</option>
+<option value="Copacabana / Leme">Copacabana / Leme</option>
+<option value="Botafogo / Urca">Botafogo / Urca</option>
+<option value="Jardim Botânico / Gávea">Jardim Botânico / Gávea</option>
+<option value="Centro / Lapa / Glória">Centro / Lapa / Glória</option>
+<option value="Flamengo / Catete">Flamengo / Catete</option>
+<option value="Barra / Recreio / Joá">Barra / Recreio / Joá</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Toggles & Action -->
+<div class="pt-8 border-t border-outline-variant">
+<div class="flex flex-col md:flex-row items-center justify-between gap-8 mb-4">
+<div class="flex flex-col gap-5">
+<label class="inline-flex items-center cursor-pointer group">
+<input class="sr-only peer" id="viral-toggle" type="checkbox"/>
+<div class="relative w-12 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ms-4 font-button text-sm text-stone-600 group-hover:text-primary transition-colors">Explorar Lugares Virais / Tendência</span>
+</label>
+<label class="inline-flex items-center cursor-pointer group">
+<input checked="" class="sr-only peer" id="mode-toggle" type="checkbox"/>
+<div class="relative w-12 h-6 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-tertiary"></div>
+<span class="ms-4 font-button text-sm text-stone-600 group-hover:text-tertiary transition-colors">Modo Descoberta Social <span class="text-[10px] text-tertiary bg-tertiary/10 px-2 py-0.5 rounded-full ml-1 font-bold">Ativado</span></span>
+</label>
+</div>
+<button class="w-full md:w-auto bg-primary-container text-white px-16 py-6 rounded-2xl font-button text-lg hover:opacity-90 transition-all shadow-xl hover:scale-[1.02] active:scale-95" id="build-plan-btn" onclick="renderResults()">
+                                    Montar Meu Plano
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Results Area -->
+<section class="hidden py-24 bg-surface-container px-4 md:px-0 scroll-mt-20" id="results-area">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-stone-200 pb-8">
+<div>
+<h2 class="font-h2 text-4xl text-primary mb-3" id="results-header">Curadoria para Você</h2>
+<p class="font-body-md text-stone-600 max-w-lg" id="results-subtext">Baseado em sua busca por algo especial no Rio.</p>
+</div>
+<button class="text-primary font-button flex items-center gap-2 hover:bg-primary/5 px-4 py-2 rounded-lg transition-colors" onclick="scrollToTop()">
+<span class="material-symbols-outlined text-xl">restart_alt</span> Alterar Preferências
+                    </button>
+</div>
+<div class="grid md:grid-cols-3 gap-10" id="results-grid">
+<!-- Injected by JS -->
+</div>
+</div>
+</section>
+<!-- Inspiration Section -->
+<section class="py-24 px-4 md:px-0" id="inspiration">
+<div class="max-w-7xl mx-auto">
+<div class="mb-12 text-center">
+<h2 class="font-h2 text-4xl text-primary mb-4">Inspiração para seu Encontro</h2>
+<p class="font-body-md text-stone-500">Não sabe por onde começar? Explore nossas coleções curadas.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<div class="group cursor-pointer relative aspect-[4/5] rounded-2xl overflow-hidden shadow-lg">
+<img alt="Primeiro Encontro" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK2OJHvth0oNMPGopj8jW4iOR2AllO09WxCw2piojjFy0VUX9zkb-eRw7O9ERYLfPO1AssoUOPk614JUUYvbd-aQASshhHpVxnVpCm_ZGQFhGNI8PtQ7eCGJJi4ZnZZHAwOPuBnCgLPQnmSfXovhT76RjLGM4JkbmwZQpyLCMkC228K5NSy9Fy_Nq9QrnW9_FvhjhMr-GR6zLZAYgmOkimxXiBmbkvxs_fwTtPWebKMWWvNKwTrdk1hXUn54irUWMyRKwx64TIJQo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-8 left-8 text-white">
+<h4 class="font-h3 text-2xl mb-2">Primeiro Encontro</h4>
+<p class="text-white/80 text-sm">Ambientes leves e com boa energia</p>
+</div>
+</div>
+<div class="group cursor-pointer relative aspect-[4/5] rounded-2xl overflow-hidden shadow-lg">
+<img alt="Aniversário" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALqRT0of-DQvLCFQ1c3E65kwUQRr_rG8O1JQAIVud4oFGHDHCnJ4c11P9yfBJOmeERZFYLpNi611WL0KIXHts97imZ2XG8Vp508rQ_ARqzmBySXzJjfFhXlhkTeoZUUjY1lfMy9zaS3LmGQE4aiRVyBBnzU6GwifBnBdV8Cvxy0sa6F_l1622p1fuPVWm4Tt7qzncqaEj9LmD2qzo1VuYDYbY4--rERRhO_FWtQy4n0hj48ORCv6h9v_vRaOd3jFNjeeSboiMCh1A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-8 left-8 text-white">
+<h4 class="font-h3 text-2xl mb-2">Noite de Aniversário</h4>
+<p class="text-white/80 text-sm">Alta gastronomia e vistas incríveis</p>
+</div>
+</div>
+<div class="group cursor-pointer relative aspect-[4/5] rounded-2xl overflow-hidden shadow-lg">
+<img alt="Passeio Espontâneo" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgxp9HSAzk8Aoxh7N0Ls9y--hFApH5ul6y4C592QNA1NRjkdsI4tjIynyMDVDNyygaTyqn-eehcn2wc_yuA8PQw4z5yQ7mN7JLZqPFB8xuqCK_CCfwYmhyM3CrNelV75oANMHzOG2bj-uG4Bk6PhrazWWhpp5F7i_I-gFDshKyAPpcHCUzDFhOkBenhfHlik3F6s0jMd3W1WavJAUE4A8jSXDoHM8pFsh9XJTbHTkUDxePLm2GcYmfnxZXpiQm-rIpvGJX_094GEE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-8 left-8 text-white">
+<h4 class="font-h3 text-2xl mb-2">Passeio Espontâneo</h4>
+<p class="text-white/80 text-sm">Arte, petiscos e caminhadas</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Chats View -->
+<div class="hidden max-w-5xl mx-auto py-12 px-4" id="view-chats">
+<h2 class="font-h2 text-3xl text-primary mb-8">Conversas Ativas</h2>
+<div class="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden" id="chat-list">
+<div class="p-12 text-center text-stone-400">
+<span class="material-symbols-outlined text-5xl mb-4">forum</span>
+<p>Nenhuma conversa ativa ainda. Tente planejar um encontro e fazer check-in!</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Venue Details Modal -->
+<div class="fixed inset-0 z-[100] hidden" id="details-modal">
+<div class="absolute inset-0 bg-stone-900/60 backdrop-blur-md modal-close" onclick="closeModal()"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl px-4 h-[90vh] overflow-y-auto">
+<div class="bg-white rounded-3xl overflow-hidden shadow-2xl my-8 relative" id="modal-content">
+<!-- Content injected via JS -->
+</div>
+</div>
+</div>
+<footer class="bg-stone-100 border-t border-stone-200 w-full py-16">
+<div class="flex flex-col items-center justify-center space-y-8 px-4 max-w-7xl mx-auto">
+<div class="font-serif italic font-bold text-2xl text-stone-800 tracking-tight">The Rio Concierge</div>
+<div class="flex flex-wrap justify-center gap-x-12 gap-y-6">
+<a class="text-stone-500 hover:text-primary transition-all font-serif text-sm" href="#">Sobre Nós</a>
+<a class="text-stone-500 hover:text-primary transition-all font-serif text-sm" href="#">Imprensa</a>
+<a class="text-stone-500 hover:text-primary transition-all font-serif text-sm" href="#">Termos</a>
+<a class="text-stone-500 hover:text-primary transition-all font-serif text-sm" href="#">Privacidade</a>
+<a class="text-stone-500 hover:text-primary transition-all font-serif text-sm" href="#">Contato</a>
+</div>
+<div class="w-24 h-px bg-stone-300"></div>
+<p class="font-serif text-sm text-stone-500 text-center">© 2024 The Rio Concierge. Curadoria exclusiva para descoberta urbana no Rio de Janeiro.</p>
+</div>
+</footer>
+<script>
+    let appMode = 'planner';
+
+    const seedPlaces = [
+        { 
+            id: "cristo", 
+            name: "Cristo Redentor", 
+            district: "Flamengo / Catete", 
+            type: "Vista Panorâmica", 
+            moods: ["com_vista", "romantico", "cultural", "espontaneo"], 
+            budget: "medio", 
+            energy: "Majestosa", 
+            shortDesc: "Uma das sete maravilhas do mundo moderno, oferecendo a vista mais icônica do Rio.", 
+            img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=2070", 
+            highlights: ["Vista 360º", "Histórico", "Ícone Mundial"], 
+            priorityScore: 10,
+            audienceFit: "culture_date",
+            checkins: [{ initials: "RJ", desc: 'Visitante, "inesquecível"' }],
+            comments: ["O visual é de tirar o fôlego."],
+            recent: "Ponto turístico mais visitado hoje",
+            meetups: []
+        },
+        { 
+            id: "bondinho", 
+            name: "Parque Bondinho Pão de Açúcar", 
+            district: "Botafogo / Urca", 
+            type: "Vista Panorâmica", 
+            moods: ["com_vista", "romantico", "cultural", "espontaneo"], 
+            budget: "medio", 
+            energy: "Mágica", 
+            shortDesc: "Passeio clássico com vistas deslumbrantes da cidade, ideal para o pôr do sol.", 
+            img: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?q=80&w=2070", 
+            highlights: ["Pôr do Sol", "Teleférico", "Vista da Baía"], 
+            priorityScore: 10,
+            audienceFit: "culture_date",
+            checkins: [{ initials: "CM", desc: 'Carlos, 29, "Pôr do sol incrível"' }],
+            comments: ["Sempre uma boa ideia para impressionar."],
+            recent: "12 check-ins hoje",
+            meetups: []
+        },
+        { 
+            id: "10_e_meio", 
+            name: "10 e Meio Beach Club", 
+            district: "Barra / Recreio / Joá", 
+            type: "Beach Club", 
+            moods: ["divertido", "espontaneo", "com_vista", "viral"], 
+            budget: "medio_alto", 
+            energy: "Vibrante", 
+            shortDesc: "Pé na areia com sofisticação e música boa no Recreio.", 
+            img: "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=2070", 
+            highlights: ["Beira-mar", "Drinks", "DJ Set"], 
+            priorityScore: 8,
+            viralTag: "trending",
+            checkins: [{ initials: "LB", desc: 'Lucas, 25, "vibe top"' }],
+            comments: ["Melhor sunset da Barra."],
+            recent: "Bombando nas redes sociais",
+            meetups: []
+        },
+        { 
+            id: "classico_beach", 
+            name: "Clássico Beach Club", 
+            district: "Barra / Recreio / Joá", 
+            type: "Beach Club", 
+            moods: ["romantico", "com_vista", "espontaneo", "viral"], 
+            budget: "medio", 
+            energy: "Chill & Chic", 
+            shortDesc: "O point perfeito para quem busca boa gastronomia e visual paradisíaco.", 
+            img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070", 
+            highlights: ["Gastronomia", "Vista Mar", "Sunset"], 
+            priorityScore: 9,
+            viralTag: "trending",
+            checkins: [{ initials: "AN", desc: 'Ana, 30, "lugar lindo"' }],
+            comments: ["Comida excelente e vista melhor ainda."],
+            recent: "Favorito dos locais",
+            meetups: []
+        },
+        { 
+            id: "rio_beach", 
+            name: "Rio Beach Club", 
+            district: "Barra / Recreio / Joá", 
+            type: "Beach Club", 
+            moods: ["divertido", "espontaneo", "viral", "com_vista"], 
+            budget: "medio_alto", 
+            energy: "Exclusiva", 
+            shortDesc: "Um oásis na Ilha da Coroa com piscina e deck privativo.", 
+            img: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?q=80&w=2070", 
+            highlights: ["Piscina", "Exclusividade", "Vista Canal"], 
+            priorityScore: 8,
+            viralTag: "trending",
+            checkins: [{ initials: "GP", desc: 'Gabi, 27, "domingo perfeito"' }],
+            comments: ["Experiência de resort no Rio."],
+            recent: "Poucas vagas disponíveis",
+            meetups: []
+        },
+        { 
+            id: "pesqueiro", 
+            name: "Pesqueiro", 
+            district: "Barra / Recreio / Joá", 
+            type: "Restaurante Beach", 
+            moods: ["romantico", "com_vista", "espontaneo"], 
+            budget: "medio_alto", 
+            energy: "Sofisticada", 
+            shortDesc: "Referência em frutos do mar com uma varanda debruçada sobre o mar da Reserva.", 
+            img: "https://images.unsplash.com/photo-1551218808-94e220e084d2?q=80&w=1974", 
+            highlights: ["Frutos do Mar", "Frente Mar", "Carta de Vinhos"], 
+            priorityScore: 8,
+            audienceFit: "couple_core",
+            checkins: [{ initials: "MR", desc: 'Mauro, 40, "jantar excelente"' }],
+            comments: ["O melhor peixe da região."],
+            recent: "Recomendado para casais",
+            meetups: []
+        },
+        { 
+            id: "joatinga", 
+            name: "Praia da Joatinga", 
+            district: "Barra / Recreio / Joá", 
+            type: "Parque e Passeio", 
+            moods: ["com_vista", "romantico", "espontaneo", "economico"], 
+            budget: "economico", 
+            energy: "Selvagem & Bela", 
+            shortDesc: "Uma praia escondida e paradisíaca, acessível apenas na maré baixa.", 
+            img: "https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=2070", 
+            highlights: ["Exclusiva", "Natureza", "Pôr do Sol"], 
+            priorityScore: 7,
+            viralTag: "trending",
+            checkins: [{ initials: "TH", desc: 'Tiago, 22, "melhor praia do Rio"' }],
+            comments: ["Lugar mágico, preservem a natureza."],
+            recent: "Check-in popular no Instagram",
+            meetups: []
+        },
+        { 
+            id: "gigoia", 
+            name: "Ilha da Gigóia", 
+            district: "Barra / Recreio / Joá", 
+            type: "Passeio Cultural", 
+            moods: ["calmo", "espontaneo", "cultural"], 
+            budget: "medio", 
+            energy: "Boêmia & Tranquila", 
+            shortDesc: "Um refúgio pantaneiro no meio da Barra, com ruelas charmosas e ótimos restaurantes.", 
+            img: "https://images.unsplash.com/photo-1596422846543-75c6fc18a5cf?q=80&w=2070", 
+            highlights: ["Passeio de Barco", "Gastronomia", "Escondido"], 
+            priorityScore: 7,
+            checkins: [{ initials: "FL", desc: 'Flavia, 33, "parece que saí do Rio"' }],
+            comments: ["Lugar super charmoso e relaxante."],
+            recent: "Descoberta urbana",
+            meetups: []
+        },
+        { 
+            id: "tereze", 
+            name: "Térèze", 
+            district: "Santa Teresa", 
+            type: "Alta Gastronomia", 
+            moods: ["romantico", "calmo"], 
+            budget: "medio_alto", 
+            energy: "Calma & Sofisticada", 
+            shortDesc: "Localizado no Hotel Santa Teresa MGallery, oferece uma das vistas mais deslumbrantes da Baía de Guanabara.", 
+            img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070", 
+            highlights: ["Vista Panorâmica", "Menu Degustação", "Luz de Velas"], 
+            reason: "Romântico + Santa Teresa + Premium. Perfeito para uma celebração íntima onde o visual compensa cada centavo.",
+            checkins: [
+                { initials: "ML", desc: 'Marina, 27–32, "vim pelo sunset"' },
+                { initials: "RF", desc: 'Rafael, 30–35, "primeira vez aqui"' }
+            ],
+            comments: ["Ótimo para um date sem pressa.", "A vista vale muito no fim da tarde."],
+            recent: "2 novos check-ins nos últimos 20 minutos",
+            meetups: [
+                { title: "Jantar Harmonizado", time: "Hoje, 20:00", host: "Térèze", goal: "Jantar Romântico", vibe: "Elegante", price: "R$ 350", attendees: 12 }
+            ]
+        },
+        { 
+            id: "aprazivel", 
+            name: "Aprazível", 
+            district: "Santa Teresa", 
+            type: "Cozinha Brasileira", 
+            moods: ["romantico", "espontaneo"], 
+            budget: "medio_alto", 
+            energy: "Tropical & Viva", 
+            shortDesc: "Um refúgio rústico-chique cercado por natureza com vista para o Centro e Baía.", 
+            img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2074", 
+            highlights: ["Ambiente Aberto", "Artesanal", "Romântico"], 
+            reason: "Espontâneo + Santa Teresa + Médio-Alto. Combina a rusticidade carioca com um serviço impecável.",
+            checkins: [
+                { initials: "JP", desc: 'João, 25-30, "aniversário de namoro"' },
+                { initials: "AS", desc: 'Ana, 31-36, "sempre volto aqui"' }
+            ],
+            comments: ["Comida maravilhosa e clima único.", "Reserve uma mesa na varanda!"],
+            recent: "1 novo check-in agora mesmo",
+            meetups: []
+        },
+        { 
+            id: "zaza", 
+            name: "Zazá Bistrô", 
+            district: "Ipanema / Leblon", 
+            type: "Contemporâneo", 
+            moods: ["romantico", "divertido"], 
+            budget: "medio_alto", 
+            energy: "Eclética & Colorida", 
+            shortDesc: "Cozinha com toques asiáticos em um dos casarões mais charmosos e coloridos de Ipanema.", 
+            img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1974", 
+            highlights: ["Luz de Velas", "Decoração Artística", "Ipanema Vibes"], 
+            reason: "Divertido + Ipanema + Médio-Alto. Ambiente descontraído porém extremamente romântico e sensorial.",
+            checkins: [
+                { initials: "BT", desc: 'Beto, 28-33, "drinks impecáveis"' }
+            ],
+            comments: ["Lugar mágico no coração de Ipanema.", "A lula com risoto é imperdível."],
+            recent: "3 pessoas salvaram este local na última hora",
+            meetups: [
+                { title: "Drinks e Descobertas", time: "Amanhã, 19:30", host: "Ana", goal: "Conhecer gente", vibe: "Animada", price: "Consumo", attendees: 6 }
+            ]
+        },
+        { 
+            id: "mam", 
+            name: "MAM Rio", 
+            district: "Centro / Lapa / Glória", 
+            type: "Cultura & Arte", 
+            moods: ["calmo", "espontaneo"], 
+            budget: "economico", 
+            energy: "Inspiração & Relax", 
+            shortDesc: "Arte moderna, jardins de Burle Marx e uma vista incrível da Baía de Guanabara.", 
+            img: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2070", 
+            highlights: ["Exposições", "Jardins", "Passeio a pé"], 
+            reason: "Calmo + Centro + Econômico. Perfeito para caminhar, conversar sobre arte e relaxar.",
+            checkins: [
+                { initials: "LI", desc: 'Lilian, 24, "exposição nova tá linda"' }
+            ],
+            comments: ["Clima super agradável para um domingo.", "Rende ótimas fotos e conversas."],
+            recent: "5 novos check-ins hoje",
+            meetups: [
+                { title: "Passeio Cultural + Café", time: "Sábado, 15:00", host: "Grupo Arte Rio", goal: "Networking", vibe: "Tranquila", price: "Grátis", attendees: 15 }
+            ]
+        }
+    ];
+
+    const partyData = [
+        { 
+            id: "sunset_arpoador", 
+            name: "Sunset no Arpoador", 
+            district: "Ipanema / Leblon", 
+            type: "Beach Club", 
+            moods: ["divertido", "espontaneo"], 
+            budget: "economico", 
+            energy: "Energia Alta", 
+            shortDesc: "Pôr do sol icônico com DJ set de House e drinks refrescantes ao ar livre.", 
+            img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073", 
+            highlights: ["Vista do Pôr do Sol", "House Music", "Open Air"], 
+            host: "Guto", 
+            objective: "Dançar & Socializar", 
+            time: "16:00 - 22:00",
+            checkins: [
+                { initials: "GL", desc: 'Guto (Host), "A vibe tá incrível!"' },
+                { initials: "MA", desc: 'Marcio, 24, "chegando agora"' }
+            ],
+            comments: ["A vibe de hoje tá demais!", "Melhor lugar pra começar a noite."],
+            recent: "Lotação de 80% atingida",
+            meetups: []
+        },
+        { 
+            id: "lapa_street", 
+            name: "Samba da Lapa", 
+            district: "Centro / Lapa / Glória", 
+            type: "Cultural / Rua", 
+            moods: ["divertido", "espontaneo"], 
+            budget: "economico", 
+            energy: "Vibrante", 
+            shortDesc: "A essência boêmia do Rio: Samba de raiz e energia contagiante nos Arcos da Lapa.", 
+            img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070", 
+            highlights: ["Samba de Roda", "Boemia Tradicional"], 
+            host: "Zeca", 
+            objective: "Cultura & Networking", 
+            time: "20:00 - 03:00",
+            checkins: [
+                { initials: "LN", desc: 'Lia, 29, "primeiro samba do ano"' }
+            ],
+            comments: ["Melhor caipirinha da região.", "Energia surreal."],
+            recent: "5 novos check-ins nos últimos 10 minutos",
+            meetups: []
+        },
+        { 
+            id: "funk_chic", 
+            name: "Baile Chic Botafogo", 
+            district: "Botafogo / Urca", 
+            type: "Evento Privado", 
+            moods: ["divertido", "espontaneo"], 
+            budget: "medio", 
+            energy: "Explosiva", 
+            shortDesc: "Funk carioca curado em casarão histórico. Entrada restrita a convidados e lista.", 
+            img: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?q=80&w=2069", 
+            highlights: ["Funk Curado", "Open Bar Premium"], 
+            host: "Rafa", 
+            objective: "Festa & Networking", 
+            time: "22:00 - 05:00",
+            checkins: [
+                { initials: "PR", desc: 'Paula, 22, "melhor set de funk"' }
+            ],
+            comments: ["Aprovação rápida, galera top.", "Gente bonita e som alto."],
+            recent: "Aprovação manual ativa (médio 5 min)",
+            meetups: []
+        }
+    ];
+
+    function toggleMood(btn) {
+        btn.classList.toggle('chip-active');
+    }
+
+    function toggleBudget(btn) {
+        const buttons = document.querySelectorAll('.budget-btn');
+        buttons.forEach(b => b.classList.remove('chip-active'));
+        btn.classList.add('chip-active');
+    }
+
+    function switchAppMode(mode) {
+        appMode = mode;
+        const plannerBtn = document.getElementById('mode-planner');
+        const partyBtn = document.getElementById('mode-party');
+        const heroTitle = document.getElementById('hero-title');
+        const heroSub = document.getElementById('hero-subtitle');
+        const step1Title = document.getElementById('step-1-title');
+
+        plannerBtn.className = "px-6 py-2 rounded-lg font-button text-sm transition-all text-stone-500 hover:bg-stone-50";
+        partyBtn.className = "px-6 py-2 rounded-lg font-button text-sm transition-all text-stone-500 hover:bg-stone-50";
+
+        if(mode === 'planner') {
+            plannerBtn.classList.add('mode-btn-active', 'text-white');
+            heroTitle.innerText = "O que fazer com seu par hoje à noite?";
+            heroSub.innerText = "Encontre os melhores programas e lugares no Rio de Janeiro com base no seu clima, orçamento e região.";
+            step1Title.innerText = "Qual é o clima?";
+            document.getElementById('build-plan-btn').innerText = "Montar Meu Plano";
+        } else {
+            partyBtn.classList.add('mode-btn-active', 'text-white');
+            heroTitle.innerText = "Sinta a Energia da Noite Carioca";
+            heroSub.innerText = "Descubra festas, beach clubs e gatherings exclusivos acontecendo agora no Rio.";
+            step1Title.innerText = "Qual a Vibe?";
+            document.getElementById('build-plan-btn').innerText = "Ver Radar de Festas";
+        }
+        document.getElementById('results-area').classList.add('hidden');
+    }
+
+    function renderResults() {
+        const resultsArea = document.getElementById('results-area');
+        const resultsGrid = document.getElementById('results-grid');
+        
+        resultsArea.classList.remove('hidden');
+        resultsArea.scrollIntoView({ behavior: 'smooth' });
+        
+        const selectedMoods = Array.from(document.querySelectorAll('.mood-btn.chip-active')).map(btn => btn.dataset.mood);
+        const selectedBudget = document.querySelector('.budget-btn.chip-active')?.dataset.budget;
+        const selectedNeighborhood = document.getElementById('neighborhood-select').value;
+        const isViralOnly = document.getElementById('viral-toggle').checked;
+
+        let results = appMode === 'planner' ? [...seedPlaces] : [...partyData];
+
+        // Scoring & Filtering
+        results = results.map(item => {
+            let score = item.priorityScore || 0;
+            
+            // Mood matching
+            const matchCount = selectedMoods.filter(m => item.moods.includes(m)).length;
+            score += matchCount * 5;
+
+            // Budget matching
+            if (selectedBudget && item.budget === selectedBudget) {
+                score += 10;
+            }
+
+            // District matching
+            if (selectedNeighborhood && item.district === selectedNeighborhood) {
+                score += 15;
+            }
+
+            // Viral tag matching
+            if (isViralOnly && item.viralTag === "trending") {
+                score += 20;
+            }
+
+            return { ...item, matchScore: score };
+        });
+
+        // Sort by score descending and take top 3
+        results.sort((a, b) => b.matchScore - a.matchScore);
+        const topResults = results.slice(0, 3);
+
+        resultsGrid.innerHTML = '';
+
+        topResults.forEach(item => {
+            const cardHTML = `
+                <div class="bg-white rounded-2xl shadow-sm border border-outline-variant overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-primary">
+                            ${item.matchScore}% Match
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-h3 text-xl text-primary font-bold">${item.name}</h3>
+                        </div>
+                        <p class="text-sm text-stone-500 mb-4 flex items-center gap-1"><span class="material-symbols-outlined text-sm">location_on</span> ${item.district}</p>
+                        <p class="font-body-md text-stone-700 mb-6 flex-grow">${item.shortDesc}</p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            ${item.highlights ? item.highlights.map(h => `<span class="bg-surface-container-low text-stone-600 px-3 py-1 rounded-lg text-xs font-semibold">${h}</span>`).join('') : ''}
+                        </div>
+
+                        <button onclick="showDetails('${item.id}')" class="w-full border border-primary text-primary hover:bg-primary hover:text-white transition-colors py-3 rounded-xl font-button font-bold text-sm">
+                            Ver Detalhes
+                        </button>
+                    </div>
+                </div>
+            `;
+            resultsGrid.innerHTML += cardHTML;
+        });
+    }
+
+    function showDetails(id) {
+        const item = [...seedPlaces, ...partyData].find(p => p.id === id);
+        if (!item) return;
+
+        const modal = document.getElementById('details-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        modalContent.innerHTML = `
+            <div class="relative h-64 md:h-80 w-full">
+                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-2 rounded-full transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 md:p-10">
+                    <h2 class="font-h2 text-3xl md:text-5xl text-white mb-2">${item.name}</h2>
+                    <p class="text-white/80 flex items-center gap-2"><span class="material-symbols-outlined text-lg">location_on</span> ${item.district}</p>
+                </div>
+            </div>
+            <div class="p-6 md:p-10">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="md:col-span-2 space-y-8">
+                        <div>
+                            <h3 class="font-h3 text-xl text-primary mb-3">Sobre</h3>
+                            <p class="text-stone-700 leading-relaxed">${item.shortDesc} ${item.reason || ''}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-h3 text-xl text-primary mb-3">Destaques</h3>
+                            <ul class="space-y-2">
+                                ${item.highlights ? item.highlights.map(h => `
+                                    <li class="flex items-center gap-3 text-stone-700">
+                                        <span class="material-symbols-outlined text-tertiary">check_circle</span>
+                                        ${h}
+                                    </li>
+                                `).join('') : ''}
+                            </ul>
+                        </div>
+
+                        ${item.comments && item.comments.length > 0 ? `
+                        <div>
+                            <h3 class="font-h3 text-xl text-primary mb-3">O que dizem</h3>
+                            <div class="space-y-3">
+                                ${item.comments.map(c => `
+                                    <div class="bg-surface-container-low p-4 rounded-xl text-stone-700 italic">"${c}"</div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-surface-container rounded-2xl p-6">
+                            <h4 class="font-bold text-primary mb-4 text-sm uppercase tracking-wider">Vibe Atual</h4>
+                            ${item.recent ? `
+                            <div class="flex items-start gap-3 mb-4 text-sm text-stone-600">
+                                <span class="material-symbols-outlined text-tertiary">local_fire_department</span>
+                                <span>${item.recent}</span>
+                            </div>
+                            ` : ''}
+                            ${item.checkins && item.checkins.length > 0 ? `
+                            <div class="space-y-3">
+                                ${item.checkins.map(c => `
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-xs font-bold">${c.initials}</div>
+                                        <p class="text-xs text-stone-500">${c.desc}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ` : ''}
+                        </div>
+                        
+                        <button class="w-full bg-primary text-white py-4 rounded-xl font-button font-bold hover:bg-primary-container transition-colors shadow-lg">
+                            Salvar no Roteiro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('details-modal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showView(view) {
+        document.getElementById('view-home').classList.add('hidden');
+        document.getElementById('view-chats').classList.add('hidden');
+        
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.remove('nav-link-active', 'font-semibold', 'border-b-2', 'border-[#6B1D23]');
+        });
+
+        if (view === 'home') {
+            document.getElementById('view-home').classList.remove('hidden');
+            document.querySelector('.home-nav').classList.add('nav-link-active', 'font-semibold', 'border-b-2', 'border-[#6B1D23]');
+        } else if (view === 'chats') {
+            document.getElementById('view-chats').classList.remove('hidden');
+            document.querySelector('.chats-nav').classList.add('nav-link-active', 'font-semibold', 'border-b-2', 'border-[#6B1D23]');
+        }
+    }
+</script></body></html>
